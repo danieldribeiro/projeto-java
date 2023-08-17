@@ -179,46 +179,6 @@ public class AgendamentoExameForm extends JFrame {
         }
     }
 
-
-//    private void agendarExame() {
-//        String paciente = (String) pacienteComboBox.getSelectedItem();
-//        String medico = (String) medicoComboBox.getSelectedItem();
-//        String exame = (String) exameComboBox.getSelectedItem();
-//        LocalDateTime dataHora = LocalDateTime.parse(dataHoraField.getText());
-//
-//        if (verificarConflitoHorarios(medico, dataHora)) {
-//            JOptionPane.showMessageDialog(this, "Conflito de horários! O médico já possui um agendamento para esse horário.");
-//            return;
-//        }
-//
-//        if (!verificarIntervaloMinimo(medico, dataHora)) {
-//            JOptionPane.showMessageDialog(this, "Intervalo mínimo de 15 minutos entre agendamentos consecutivos para o mesmo médico.");
-//            return;
-//        }
-//
-//        Connection conexao = DB.connecta();
-//        String sql = "INSERT INTO Agendamentos (PacienteID, MedicoID, ExameID, DataHoraAgendamento) VALUES (?, ?, ?, ?)";
-
-//        try {
-//            PreparedStatement preparedStatement = conexao.prepareStatement(sql);
-//            preparedStatement.setInt(1, obterIdPaciente(paciente));
-//            preparedStatement.setInt(2, obterIdMedico(medico));
-//            preparedStatement.setInt(3, obterIdExame(exame));
-//            preparedStatement.setObject(4, dataHora);
-//
-//            atualizarExameRealizado(obterIdExame(exame));
-//
-//            preparedStatement.executeUpdate();
-//            JOptionPane.showMessageDialog(this, "Exame agendado com sucesso!");
-//
-//            DB.desconecta(conexao);
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            JOptionPane.showMessageDialog(this, "Erro ao agendar exame.");
-//        }
-
-//    }
-
     private boolean verificarConflitoHorarios(String medico, LocalDateTime dataHora) {
         Connection conexao = DB.connecta();
         String sql = "SELECT COUNT(*) FROM Agendamentos WHERE MedicoID = ? AND DataHoraAgendamento = ?";
@@ -340,22 +300,6 @@ public class AgendamentoExameForm extends JFrame {
         }
     }
 
-//    private int atualizarExameRealizado(int exameId) {
-//        Connection conexao = DB.connecta();
-//        String sql = "UPDATE Exames SET Realizado = Realizado + 1 WHERE ID = ?";
-//
-//        try {
-//            PreparedStatement preparedStatement = conexao.prepareStatement(sql);
-//            preparedStatement.setInt(1, exameId);
-//            preparedStatement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            DB.desconecta(conexao);
-//        }
-//        return exameId;
-//    }
-
     private void atualizarExameRealizado(int exameId) {
         Connection conexao = DB.connecta();
         String sql = "UPDATE Exames SET Realizado = Realizado + 1 WHERE ID = ?";
@@ -370,8 +314,6 @@ public class AgendamentoExameForm extends JFrame {
             DB.desconecta(conexao);
         }
     }
-
-
 
     private void retornarTelaPrincipal() {
         dispose();

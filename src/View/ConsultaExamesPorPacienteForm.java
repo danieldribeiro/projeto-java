@@ -5,6 +5,11 @@ import Sevices.DB;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,8 +43,6 @@ public class ConsultaExamesPorPacienteForm extends JFrame {
         colunas.add("Data e Hora");
 
         Vector<Vector<String>> dados = new Vector<>();
-
-        // ...
 
         pacientesComboBox.addActionListener(e -> {
             dados.clear();
@@ -83,9 +86,28 @@ public class ConsultaExamesPorPacienteForm extends JFrame {
         JScrollPane scrollPane = new JScrollPane(examesPorPacienteTable);
         container.add(scrollPane, BorderLayout.CENTER);
 
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
         JButton fecharButton = new JButton("Fechar");
-        fecharButton.addActionListener(e -> dispose()); // Fecha a janela de consulta
-        container.add(fecharButton, BorderLayout.SOUTH);
+        fecharButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Fecha a janela de consulta
+            }
+        });
+        buttonPanel.add(fecharButton);
+
+        JButton exportarButton = new JButton("Exportar para TXT");
+        exportarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exportarConsultaParaArquivo(dados);
+            }
+        });
+        buttonPanel.add(exportarButton);
+
+        container.add(buttonPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
@@ -108,8 +130,32 @@ public class ConsultaExamesPorPacienteForm extends JFrame {
         }
     }
 
+    private void exportarConsultaParaArquivo(Vector<Vector<String>> dados) {
+        JFileChooser fileChooser = new JFileChooser();
+        int resultado = fileChooser.showSaveDialog(this);
+
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            try {
+                FileWriter fileWriter = new FileWriter(fileChooser.getSelectedFile() + ".txt");
+                PrintWriter printWriter = new PrintWriter(fileWriter);
+
+                for (Vector<String> linha : dados) {
+                    String linhaFormatada = String.join(", ", linha);
+                    printWriter.println(linhaFormatada);
+                }
+
+                printWriter.close();
+                fileWriter.close();
+
+                JOptionPane.showMessageDialog(this, "Dados exportados para o arquivo com sucesso!");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Erro ao exportar os dados para o arquivo.");
+            }
+        }
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new ConsultaExamesPorPacienteForm());
     }
 }
-
